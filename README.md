@@ -92,6 +92,7 @@ Response, sort byDay ascending by date.
 
 1. For redirect, use `curl -v http://localhost:3000/slug` to see the 302 redirect code
 
-## TODO
+## V2
 
-1. URLs list
+1. More robust randomization => create many random slugs and find one that works
+2. Postgres integration
