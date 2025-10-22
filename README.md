@@ -83,3 +83,7 @@ Response, sort byDay ascending by date.
 
 - GitHub repo (or zip) with setup instructions and a few sample curl commands.
 - Note any tradeoffs or “what I’d add next” if time ran out.
+
+## Explanation
+
+1.
