@@ -1,8 +1,8 @@
-import { autoInjectable } from "tsyringe";
+import { singleton } from "tsyringe";
 import { ShortUrl } from "../models/short_url";
 
 // NOTE: Starting with in-memory, v2 => Postgres
-@autoInjectable()
+@singleton()
 export class UrlStore {
   private shortUrlBySlug: Map<string, ShortUrl> = new Map();
 
@@ -10,10 +10,17 @@ export class UrlStore {
     return this.shortUrlBySlug.get(slug);
   }
 
+  public async getAllUrls(limit: number, offset: number): Promise<ShortUrl[]> {
+    return Array.from(this.shortUrlBySlug.values()).slice(
+      offset,
+      offset + limit
+    );
+  }
+
   public async createUrl(
     target: string,
     suggestedSlug?: string
-  ): Promise<void> {
+  ): Promise<ShortUrl | null> {
     const slug = suggestedSlug ?? this.generateSlug();
     const shortUrl: ShortUrl = {
       slug,
@@ -22,9 +29,10 @@ export class UrlStore {
     };
 
     if (this.shortUrlBySlug.has(slug)) {
-      throw new Error("Slug already exists");
+      return null;
     }
     this.shortUrlBySlug.set(slug, shortUrl);
+    return shortUrl;
   }
 
   /**

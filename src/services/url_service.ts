@@ -1,11 +1,24 @@
-import { autoInjectable } from "tsyringe";
+import { singleton } from "tsyringe";
 import { UrlStore } from "../store/url_store";
+import { ShortUrl } from "../models/short_url";
 
-@autoInjectable()
+@singleton()
 export class UrlService {
   constructor(private readonly urlStore: UrlStore) {}
 
-  async getUrl(slug: string) {
+  public async getUrl(slug: string) {
     return this.urlStore.getUrl(slug);
+  }
+
+  public async getAllUrls(limit: number, offset: number) {
+    console.log("getAllUrls", limit, offset);
+    return this.urlStore.getAllUrls(limit, offset);
+  }
+
+  public async createUrl(
+    target: string,
+    slug?: string
+  ): Promise<ShortUrl | null> {
+    return this.urlStore.createUrl(target, slug);
   }
 }

@@ -87,3 +87,11 @@ Response, sort byDay ascending by date.
 ## Explanation
 
 1.
+
+## Testing Notes
+
+1. For redirect, use `curl -v http://localhost:3000/slug` to see the 302 redirect code
+
+## TODO
+
+1. URLs list

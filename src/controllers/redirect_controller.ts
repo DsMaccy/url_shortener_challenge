@@ -1,18 +1,23 @@
-import { autoInjectable, injectable } from "tsyringe";
-import { UrlService } from "../services/url_service";
+import { singleton } from "tsyringe";
+import { RedirectService } from "../services/redirect_service";
+import { Request, Response } from "express";
+import { ErrorCodes } from "../models/error";
+import { createErrorResponse } from "../utils/express_utils";
 
-@autoInjectable()
+@singleton()
 export class RedirectController {
-  constructor(private readonly urlService: UrlService) {}
+  constructor(private readonly redirectService: RedirectService) {}
 
-  public async redirectUrl(req: Express.Request, res: Express.Response) {
-    console.log(req);
-    console.log(res);
-    // const { slug } = req.params as { slug: string };
-    // const url = await this.urlService?.getUrl(slug);
-    // if (!url) {
-    //   return res.status(404).json({ error: "URL not found" });
-    // }
-    // return res.redirect(url.target);
+  public async redirectUrl(req: Request<{ slug: string }>, res: Response) {
+    const { slug } = req.params;
+    const url = await this.redirectService.getRedirectUrl(
+      slug,
+      req.ip,
+      req.get("User-Agent")
+    );
+    if (!url) {
+      return createErrorResponse(res, ErrorCodes.NOT_FOUND, "URL not found");
+    }
+    return res.redirect(url.target);
   }
 }
